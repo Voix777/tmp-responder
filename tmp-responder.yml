@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tmp-responder
+  labels:
+    app: tmp-responder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tmp-responder
+  template:
+    metadata:
+      labels:
+        app: tmp-responder
+    spec:
+      containers:
+        - name: tmp-responder
+          image: voix777/tmp-responder
+          imagePullPolicy: Always #IfNotPresent
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "1000m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tmp-responder
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: tmp-responder
+  sessionAffinity: None
