@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -22,7 +23,8 @@ public class ResponderController {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private ResponseEntity<List<Object>> getListResponseEntity(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody) throws JsonProcessingException {
+    private ResponseEntity<List<Object>> getListResponseEntity(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody, HttpServletRequest requestType) throws JsonProcessingException {
+        LOG.info("Type: {}", requestType.getMethod());
         LOG.info("Header: {}", headerValue);
         LOG.info("Request body: {}", requestbody);
         ObjectMapper mapper = new ObjectMapper();
@@ -46,22 +48,28 @@ public class ResponderController {
     }
 
     @PostMapping("/**")
-    public ResponseEntity<List<Object>> logPostRequest(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody) throws InterruptedException, URISyntaxException, IOException {
-        return getListResponseEntity(headerValue, requestbody);
+    public ResponseEntity<List<Object>> logPostRequest(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody, HttpServletRequest requestType) throws InterruptedException, URISyntaxException, IOException {
+        return getListResponseEntity(headerValue, requestbody, requestType);
     }
 
     @PatchMapping("/**")
-    public ResponseEntity<List<Object>> logPatchRequest(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody) throws InterruptedException, URISyntaxException, IOException {
-        return getListResponseEntity(headerValue, requestbody);
+    public ResponseEntity<List<Object>> logPatchRequest(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody, HttpServletRequest requestType) throws InterruptedException, URISyntaxException, IOException {
+        return getListResponseEntity(headerValue, requestbody, requestType);
     }
 
     @PutMapping("/**")
-    public ResponseEntity<List<Object>> logPutRequest(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody) throws InterruptedException, URISyntaxException, IOException {
-        return getListResponseEntity(headerValue, requestbody);
+    public ResponseEntity<List<Object>> logPutRequest(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody, HttpServletRequest requestType) throws InterruptedException, URISyntaxException, IOException {
+        return getListResponseEntity(headerValue, requestbody, requestType);
+    }
+
+    @DeleteMapping("/**")
+    public ResponseEntity<List<Object>> logDeleteRequest(@RequestHeader Map<String, String> headerValue, @RequestBody(required = false) JsonNode requestbody, HttpServletRequest requestType) throws InterruptedException, URISyntaxException, IOException {
+        return getListResponseEntity(headerValue, requestbody, requestType);
     }
 
     @GetMapping("/**")
-    public ResponseEntity<List<Object>> logGetRequest(@RequestHeader Map<String, String> headerValue, @RequestParam() Map<String,String> requestParam) throws InterruptedException, URISyntaxException, IOException {
+    public ResponseEntity<List<Object>> logGetRequest(@RequestHeader Map<String, String> headerValue, @RequestParam() Map<String,String> requestParam, HttpServletRequest requestType) throws InterruptedException, URISyntaxException, IOException {
+        LOG.info("Type: {}", requestType.getMethod());
         LOG.info("Header: {}", headerValue);
         LOG.info("Request params: {}", requestParam);
         HttpHeaders headers = new HttpHeaders();
